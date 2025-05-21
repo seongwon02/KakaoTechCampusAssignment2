@@ -1,6 +1,6 @@
 package com.example.scheduler.lv3.controller;
 
-import com.example.scheduler.lv3.dto.EventFilterDto;
+import com.example.scheduler.lv3.dto.EventFilterRequestDto;
 import com.example.scheduler.lv3.dto.EventRequestDto;
 import com.example.scheduler.lv3.dto.EventResponseDto;
 import com.example.scheduler.lv3.service.EventService;
@@ -29,10 +29,10 @@ public class EventController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EventResponseDto>> FindAllFilteredEvent(@RequestBody EventFilterDto dto) {
+    public ResponseEntity<List<EventResponseDto>> FindAllFilteredEvent(@RequestBody EventFilterRequestDto dto) {
 
         List<EventResponseDto> eventResponseDtoList = eventService.findAllFilteredEvent(
-                dto.getUsername(),
+                dto.getUser_id(),
                 dto.getModified_at());
 
         return new ResponseEntity<>(eventResponseDtoList, HttpStatus.OK);

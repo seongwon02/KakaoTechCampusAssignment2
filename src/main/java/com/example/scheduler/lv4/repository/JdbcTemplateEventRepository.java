@@ -1,7 +1,6 @@
-package com.example.scheduler.lv2.repository;
+package com.example.scheduler.lv4.repository;
 
-import com.example.scheduler.lv2.dto.EventResponseDto;
-import com.example.scheduler.lv2.entitiy.Event;
+import com.example.scheduler.lv4.entitiy.Event;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,54 +20,54 @@ import java.util.Map;
 
 @Slf4j
 @Repository
-public class JdbcTempleteEventRepositoy implements EventRepository {
+public class JdbcTemplateEventRepository implements EventRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
 
-    public JdbcTempleteEventRepositoy(DataSource dataSource) {
+    public JdbcTemplateEventRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
 
     @Override
-    public EventResponseDto saveEvent(Event event) {
+    public Event saveEvent(Event event) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
         jdbcInsert.withTableName("event")
                 .usingGeneratedKeyColumns("id")
-                .usingColumns("username", "password", "title", "contents");;
+                .usingColumns("user_id", "password", "title", "contents");;
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("username", event.getUsername());
+        parameters.put("user_id", event.getUser_id());
         parameters.put("password", event.getPassword());
         parameters.put("title", event.getTitle());
         parameters.put("contents", event.getContents());
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
-
-        return new EventResponseDto(key.longValue(), event.getUsername(), event.getTitle(), event.getContents());
+        // log.info("event_id : {}", key.longValue());
+        return new Event(key.longValue(), event.getUser_id(), event.getPassword(), event.getTitle(), event.getContents());
     }
 
     @Override
-    public List<EventResponseDto> findAllFilteredEvent(String username, LocalDate modified_at) {
+    public List<Event> findAllFilteredEvent(Long user_id, LocalDate modified_at) {
         String sql = "SELECT * FROM event";
-        List<EventResponseDto> result;
+        List<Event> result;
 
-        if (username != null && modified_at != null) {
-            sql += " WHERE username = ? AND DATE(modified_at) = ? ORDER BY modified_at desc";
-            result = jdbcTemplate.query(sql, EventRowMapper(), username, modified_at);
+        if (user_id != null && modified_at != null) {
+            sql += " WHERE user_id = ? AND DATE(modified_at) = ? ORDER BY modified_at desc";
+            result = jdbcTemplate.query(sql, EventRowMapperV2(), user_id, modified_at);
         }
-        else if (username != null) {
-            sql += " WHERE username = ? ORDER BY modified_at desc";
-            result = jdbcTemplate.query(sql, EventRowMapper(), username);
+        else if (user_id != null) {
+            sql += " WHERE user_id = ? ORDER BY modified_at desc";
+            result = jdbcTemplate.query(sql, EventRowMapperV2(), user_id);
         }
         else if (modified_at != null) {
             sql += " WHERE DATE(modified_at) = ? ORDER BY modified_at desc";
-            result = jdbcTemplate.query(sql, EventRowMapper(), modified_at);
+            result = jdbcTemplate.query(sql, EventRowMapperV2(), modified_at);
         }
         else {
             sql += " ORDER BY modified_at desc";
-            result = jdbcTemplate.query(sql, EventRowMapper());
+            result = jdbcTemplate.query(sql, EventRowMapperV2());
         }
 
         return result;
@@ -82,21 +81,16 @@ public class JdbcTempleteEventRepositoy implements EventRepository {
         return result.stream().findAny().orElseThrow(
                 () -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
-                        "Does not exist id = " + id
+                        "Does not exist event_id = " + id
                 )
         );
     }
 
     @Override
-    public int updateUsernameOrContents(Long id, String username, String contents) {
+    public int updateContents(Long id, String contents) {
         String sql = "UPDATE event SET";
 
-        if (username != null && contents != null)
-            return jdbcTemplate.update(sql + " username = ?, contents = ? WHERE id = ?", username, contents, id);
-        else if (username != null)
-            return jdbcTemplate.update(sql + " username = ? WHERE id = ?", username, id);
-        else
-            return jdbcTemplate.update(sql + " contents = ? WHERE id = ?", contents, id);
+        return jdbcTemplate.update(sql + " contents = ? WHERE id = ?", contents, id);
     }
 
     @Override
@@ -104,20 +98,20 @@ public class JdbcTempleteEventRepositoy implements EventRepository {
         jdbcTemplate.update("delete from event where id = ?", id);
     }
 
-    private RowMapper<EventResponseDto> EventRowMapper() {
-        return new RowMapper<EventResponseDto>() {
-            @Override
-            public EventResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new EventResponseDto(
-                        rs.getLong("id"),
-                        rs.getString("username"),
-                        rs.getString("title"),
-                        rs.getString("contents")
-                );
-            }
-
-        };
-    }
+//    private RowMapper<EventResponseDto> EventRowMapper() {
+//        return new RowMapper<EventResponseDto>() {
+//            @Override
+//            public EventResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+//                return new EventResponseDto(
+//                        rs.getLong("id"),
+//                        rs.getLong("user_id"),
+//                        rs.getString("title"),
+//                        rs.getString("contents")
+//                );
+//            }
+//
+//        };
+//    }
 
     private RowMapper<Event> EventRowMapperV2() {
         return new RowMapper<Event>() {
@@ -125,7 +119,7 @@ public class JdbcTempleteEventRepositoy implements EventRepository {
             public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return new Event(
                         rs.getLong("id"),
-                        rs.getString("username"),
+                        rs.getLong("user_id"),
                         rs.getString("password"),
                         rs.getString("title"),
                         rs.getString("contents")

@@ -19,12 +19,12 @@ import java.util.*;
 
 @Slf4j
 @Repository
-public class JdbcTempleteEventRepositoy implements EventRepository {
+public class JdbcTemplateEventRepository implements EventRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
 
-    public JdbcTempleteEventRepositoy(DataSource dataSource) {
+    public JdbcTemplateEventRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

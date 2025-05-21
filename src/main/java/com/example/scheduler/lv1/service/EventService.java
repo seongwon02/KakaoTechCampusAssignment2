@@ -1,6 +1,5 @@
 package com.example.scheduler.lv1.service;
 
-import com.example.scheduler.lv1.dto.EventFilterDto;
 import com.example.scheduler.lv1.dto.EventRequestDto;
 import com.example.scheduler.lv1.dto.EventResponseDto;
 

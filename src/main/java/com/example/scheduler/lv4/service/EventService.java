@@ -1,7 +1,7 @@
-package com.example.scheduler.lv3.service;
+package com.example.scheduler.lv4.service;
 
-import com.example.scheduler.lv3.dto.EventRequestDto;
-import com.example.scheduler.lv3.dto.EventResponseDto;
+import com.example.scheduler.lv4.dto.EventRequestDto;
+import com.example.scheduler.lv4.dto.EventResponseDto;
 
 import java.time.LocalDate;
 import java.util.List;

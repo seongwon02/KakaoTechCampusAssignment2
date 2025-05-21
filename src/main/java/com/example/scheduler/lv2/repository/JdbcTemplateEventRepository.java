@@ -1,7 +1,7 @@
-package com.example.scheduler.lv3.repository;
+package com.example.scheduler.lv2.repository;
 
-import com.example.scheduler.lv3.dto.EventResponseDto;
-import com.example.scheduler.lv3.entitiy.Event;
+import com.example.scheduler.lv2.dto.EventResponseDto;
+import com.example.scheduler.lv2.entitiy.Event;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,12 +21,12 @@ import java.util.Map;
 
 @Slf4j
 @Repository
-public class JdbcTempleteEventRepositoy implements EventRepository {
+public class JdbcTemplateEventRepository implements EventRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
 
-    public JdbcTempleteEventRepositoy(DataSource dataSource) {
+    public JdbcTemplateEventRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

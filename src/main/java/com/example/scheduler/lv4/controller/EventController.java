@@ -1,9 +1,9 @@
-package com.example.scheduler.lv1.controller;
+package com.example.scheduler.lv4.controller;
 
-import com.example.scheduler.lv1.dto.EventFilterRequestDto;
-import com.example.scheduler.lv1.dto.EventRequestDto;
-import com.example.scheduler.lv1.dto.EventResponseDto;
-import com.example.scheduler.lv1.service.EventService;
+import com.example.scheduler.lv4.dto.EventFilterRequestDto;
+import com.example.scheduler.lv4.dto.EventRequestDto;
+import com.example.scheduler.lv4.dto.EventResponseDto;
+import com.example.scheduler.lv4.service.EventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +32,7 @@ public class EventController {
     public ResponseEntity<List<EventResponseDto>> FindAllFilteredEvent(@RequestBody EventFilterRequestDto dto) {
 
         List<EventResponseDto> eventResponseDtoList = eventService.findAllFilteredEvent(
-                dto.getUsername(),
+                dto.getUser_id(),
                 dto.getModified_at());
 
         return new ResponseEntity<>(eventResponseDtoList, HttpStatus.OK);
@@ -44,4 +44,18 @@ public class EventController {
         return new ResponseEntity<>(eventService.findEventById(id), HttpStatus.OK);
     }
 
+    @PatchMapping("{id}")
+    public ResponseEntity<EventResponseDto> updateUsernameOrContents(
+            @PathVariable Long id,
+            @RequestBody EventRequestDto dto
+    ){
+        return new ResponseEntity<>(eventService.updateUsernameOrContents(id, dto.getPassword(), dto.getUsername(), dto.getContents()), HttpStatus.OK);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteEvent(@PathVariable Long id, @RequestBody EventRequestDto dto)
+    {
+        eventService.deleteEvent(id, dto.getPassword());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

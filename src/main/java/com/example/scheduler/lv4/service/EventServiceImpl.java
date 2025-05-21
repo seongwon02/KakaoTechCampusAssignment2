@@ -1,11 +1,11 @@
-package com.example.scheduler.lv3.service;
+package com.example.scheduler.lv4.service;
 
-import com.example.scheduler.lv3.dto.EventRequestDto;
-import com.example.scheduler.lv3.dto.EventResponseDto;
-import com.example.scheduler.lv3.entitiy.Event;
-import com.example.scheduler.lv3.entitiy.User;
-import com.example.scheduler.lv3.repository.EventRepository;
-import com.example.scheduler.lv3.repository.UserRepository;
+import com.example.scheduler.lv4.dto.EventRequestDto;
+import com.example.scheduler.lv4.dto.EventResponseDto;
+import com.example.scheduler.lv4.entitiy.Event;
+import com.example.scheduler.lv4.entitiy.User;
+import com.example.scheduler.lv4.repository.EventRepository;
+import com.example.scheduler.lv4.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

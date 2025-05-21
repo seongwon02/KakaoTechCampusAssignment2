@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.time.LocalDate;
 
 @Getter
-public class EventFilterDto {
+public class EventFilterRequestDto {
     private String username;
     LocalDate modified_at;
 }
