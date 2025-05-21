@@ -10,7 +10,7 @@ public interface EventRepository {
 
     Event saveEvent(Event event);
 
-    List<Event> findAllFilteredEvent(Long user_id, LocalDate modified_at);
+    List<EventResponseDto> findAllFilteredEvent(Long user_id, LocalDate modified_at);
 
     Event findEventByIdOrElseThrow(Long id);
 

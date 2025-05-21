@@ -1,12 +1,11 @@
-package com.example.scheduler.lv4.service;
+package com.example.scheduler.lv5.service;
 
-import com.example.scheduler.lv4.dto.EventRequestDto;
-import com.example.scheduler.lv4.dto.EventResponseDto;
-import com.example.scheduler.lv4.dto.EventWithUsernameResponseDto;
-import com.example.scheduler.lv4.dto.PageResponseDto;
+import com.example.scheduler.lv5.dto.EventRequestDto;
+import com.example.scheduler.lv5.dto.EventResponseDto;
+import com.example.scheduler.lv5.dto.EventWithUsernameResponseDto;
+import com.example.scheduler.lv5.dto.PageResponseDto;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public interface EventService {
     EventResponseDto saveEvent(EventRequestDto dto);

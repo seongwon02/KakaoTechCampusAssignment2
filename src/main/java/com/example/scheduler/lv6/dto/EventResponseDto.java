@@ -1,7 +1,6 @@
-package com.example.scheduler.lv3.dto;
+package com.example.scheduler.lv6.dto;
 
-import com.example.scheduler.lv3.entitiy.Event;
-import com.example.scheduler.lv3.entitiy.User;
+import com.example.scheduler.lv6.entitiy.Event;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

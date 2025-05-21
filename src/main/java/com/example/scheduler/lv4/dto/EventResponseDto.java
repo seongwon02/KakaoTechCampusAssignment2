@@ -11,16 +11,12 @@ public class EventResponseDto {
 
     private Long id;
     private Long user_id;
-    private String username;
-    private String email;
     private String title;
     private String contents;
 
-    public EventResponseDto(Event event, User user) {
+    public EventResponseDto(Event event) {
         this.id = event.getId();
-        this.user_id = user.getId();
-        this.username = user.getName();
-        this.email = user.getEmail();
+        this.user_id = event.getUser_id();
         this.title = event.getTitle();
         this.contents = event.getContents();
     }

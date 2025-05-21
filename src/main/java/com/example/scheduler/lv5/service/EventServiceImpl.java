@@ -1,25 +1,25 @@
-package com.example.scheduler.lv4.service;
+package com.example.scheduler.lv5.service;
 
-import com.example.scheduler.lv4.dto.EventRequestDto;
-import com.example.scheduler.lv4.dto.EventResponseDto;
-import com.example.scheduler.lv4.dto.EventWithUsernameResponseDto;
-import com.example.scheduler.lv4.dto.PageResponseDto;
-import com.example.scheduler.lv4.entitiy.Event;
-import com.example.scheduler.lv4.entitiy.Page;
-import com.example.scheduler.lv4.entitiy.User;
-import com.example.scheduler.lv4.repository.EventRepository;
-import com.example.scheduler.lv4.repository.UserRepository;
+import com.example.scheduler.lv5.dto.EventRequestDto;
+import com.example.scheduler.lv5.dto.EventResponseDto;
+import com.example.scheduler.lv5.dto.EventWithUsernameResponseDto;
+import com.example.scheduler.lv5.dto.PageResponseDto;
+import com.example.scheduler.lv5.entitiy.Event;
+import com.example.scheduler.lv5.entitiy.Page;
+import com.example.scheduler.lv5.entitiy.User;
+import com.example.scheduler.lv5.exception.PasswordMismatchException;
+import com.example.scheduler.lv5.exception.PasswordRequiredException;
+import com.example.scheduler.lv5.exception.UsernameAndContentsRequiredException;
+import com.example.scheduler.lv5.repository.EventRepository;
+import com.example.scheduler.lv5.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -87,10 +87,12 @@ public class EventServiceImpl implements EventService {
     public EventWithUsernameResponseDto updateUsernameOrContents(Long id, String password, String username, String contents) {
 
         if (password == null)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password are required values");
+            throw new PasswordRequiredException();
+            // throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password are required values");
 
         if (username == null && contents == null)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username or Contents are required values.");
+            throw new UsernameAndContentsRequiredException();
+            // throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username or Contents are required values.");
 
         Event findEvent;
         User findUser;
@@ -107,8 +109,10 @@ public class EventServiceImpl implements EventService {
 
         // id와 일치하는 일정을 꺼내 비밀변호 비교
         findEvent = eventRepository.findEventByIdOrElseThrow(id);
+
         if (!findEvent.getPassword().equals(password))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Password doesn't match.");
+            throw new PasswordMismatchException();
+            // throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Password doesn't match.");
 
         findUser = userRepository.findUserByIdOrElseThrow(findEvent.getUser_id());
         return new EventWithUsernameResponseDto(findEvent, findUser.getName());
@@ -117,12 +121,14 @@ public class EventServiceImpl implements EventService {
     @Override
     public void deleteEvent(Long id, String password) {
         if (password == null)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password are required values");
+            throw new PasswordRequiredException();
+            // throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password are required values");
 
         Event event = eventRepository.findEventByIdOrElseThrow(id);
 
         if (!event.getPassword().equals(password))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Password doesn't match.");
+            throw new PasswordMismatchException();
+            //throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Password doesn't match.");
 
         eventRepository.deleteEvent(id);
     }

@@ -6,6 +6,8 @@ import com.example.scheduler.lv3.entitiy.Event;
 import com.example.scheduler.lv3.entitiy.User;
 import com.example.scheduler.lv3.repository.EventRepository;
 import com.example.scheduler.lv3.repository.UserRepository;
+import com.example.scheduler.lv4.dto.EventWithUsernameResponseDto;
+import com.example.scheduler.lv4.entitiy.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -49,22 +51,16 @@ public class EventServiceImpl implements EventService {
                 dto.getContents());
 
         Event savedEvent = eventRepository.saveEvent(event);
-        log.info("event id: {}", savedEvent.getId());
-        return new EventResponseDto(savedEvent, user);
+        // log.info("event id: {}", savedEvent.getId());
+        return new EventResponseDto(savedEvent);
     }
 
     @Override
     public List<EventResponseDto> findAllFilteredEvent(Long user_id, LocalDate modified_at) {
 
-        List<Event> findEvents = eventRepository.findAllFilteredEvent(user_id, modified_at);
+        List<EventResponseDto> findEvents = eventRepository.findAllFilteredEvent(user_id, modified_at);
 
-        return findEvents.stream().
-                map(event -> {
-                    User user = userRepository.findUserByIdOrElseThrow(event.getUser_id());
-
-                    return new EventResponseDto(event, user);
-                })
-                .collect(Collectors.toList());
+        return findEvents;
     }
 
     @Override
@@ -73,7 +69,7 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findEventByIdOrElseThrow(id);
         User user = userRepository.findUserByIdOrElseThrow(event.getUser_id());
 
-        return new EventResponseDto(event, user);
+        return new EventResponseDto(event);
     }
 
     @Transactional
@@ -87,7 +83,6 @@ public class EventServiceImpl implements EventService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username or Contents are required values.");
 
         Event findEvent;
-        User findUser;
 
         // id와 일치하는 일정이 있는지 확인 후, 있다면 user_id 획득, 없다면 에러 반환
         if (username != null) {
@@ -104,8 +99,7 @@ public class EventServiceImpl implements EventService {
         if (!findEvent.getPassword().equals(password))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Password doesn't match.");
 
-        findUser = userRepository.findUserByIdOrElseThrow(findEvent.getUser_id());
-        return new EventResponseDto(findEvent, findUser);
+        return new EventResponseDto(findEvent);
     }
 
     @Override

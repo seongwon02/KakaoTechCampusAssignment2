@@ -1,13 +1,12 @@
-package com.example.scheduler.lv4.controller;
+package com.example.scheduler.lv5.controller;
 
-import com.example.scheduler.lv4.dto.*;
-import com.example.scheduler.lv4.service.EventService;
+import com.example.scheduler.lv5.dto.*;
+import com.example.scheduler.lv5.exception.*;
+import com.example.scheduler.lv5.service.EventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -57,5 +56,35 @@ public class EventController {
     {
         eventService.deleteEvent(id, dto.getPassword());
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @ExceptionHandler(PasswordMismatchException.class)
+    public ResponseEntity<ErrorResponse> handlePasswordMismatchException(PasswordMismatchException e) {
+        ErrorResponse errorResponse = new ErrorResponse(401, e.getMessage());
+        return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(PasswordRequiredException.class)
+    public ResponseEntity<ErrorResponse> handleArgumentIsNull(PasswordRequiredException e) {
+        ErrorResponse errorResponse = new ErrorResponse(400, e.getMessage());
+        return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EventNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleEventNotFound(EventNotFoundException e) {
+        ErrorResponse errorResponse = new ErrorResponse(404, e.getMessage());
+        return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UsernameAndContentsRequiredException.class)
+    public ResponseEntity<ErrorResponse> handleUsernameAndContentsIsNull(UsernameAndContentsRequiredException e) {
+        ErrorResponse errorResponse = new ErrorResponse(400, e.getMessage());
+        return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException e) {
+        ErrorResponse errorResponse = new ErrorResponse(404, e.getMessage());
+        return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }

@@ -1,7 +1,7 @@
-package com.example.scheduler.lv4.repository;
+package com.example.scheduler.lv5.repository;
 
-import com.example.scheduler.lv4.dto.EventWithUsernameResponseDto;
-import com.example.scheduler.lv4.entitiy.Event;
+import com.example.scheduler.lv5.dto.EventWithUsernameResponseDto;
+import com.example.scheduler.lv5.entitiy.Event;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -1,7 +1,9 @@
 package com.example.scheduler.lv4.repository;
 
+import com.example.scheduler.lv4.dto.EventWithUsernameResponseDto;
 import com.example.scheduler.lv4.entitiy.Event;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -49,25 +51,26 @@ public class JdbcTemplateEventRepository implements EventRepository {
     }
 
     @Override
-    public List<Event> findAllFilteredEvent(Long user_id, LocalDate modified_at) {
-        String sql = "SELECT * FROM event";
-        List<Event> result;
+    public List<EventWithUsernameResponseDto> findAllFilteredEvent(Long user_id, LocalDate modified_at, Long offset, Integer size) {
+        String sql = "SELECT e.id, e.user_id, e.title, e.contents, u.name " +
+                "FROM event e JOIN user u ON e.user_id = u.id";
+        List<EventWithUsernameResponseDto> result;
 
         if (user_id != null && modified_at != null) {
-            sql += " WHERE user_id = ? AND DATE(modified_at) = ? ORDER BY modified_at desc";
-            result = jdbcTemplate.query(sql, EventRowMapperV2(), user_id, modified_at);
+            sql += " WHERE e.user_id = ? AND DATE(e.modified_at) = ? ORDER BY e.modified_at desc limit ? offset ?";
+            result = jdbcTemplate.query(sql, EventRowMapper(), user_id, modified_at, size, offset);
         }
         else if (user_id != null) {
-            sql += " WHERE user_id = ? ORDER BY modified_at desc";
-            result = jdbcTemplate.query(sql, EventRowMapperV2(), user_id);
+            sql += " WHERE e.user_id = ? ORDER BY e.modified_at desc limit ? offset ?";
+            result = jdbcTemplate.query(sql, EventRowMapper(), user_id, size, offset);
         }
         else if (modified_at != null) {
-            sql += " WHERE DATE(modified_at) = ? ORDER BY modified_at desc";
-            result = jdbcTemplate.query(sql, EventRowMapperV2(), modified_at);
+            sql += " WHERE DATE(e.modified_at) = ? ORDER BY modified_at desc limit ? offset ?";
+            result = jdbcTemplate.query(sql, EventRowMapper(),  modified_at, size, offset);
         }
         else {
-            sql += " ORDER BY modified_at desc";
-            result = jdbcTemplate.query(sql, EventRowMapperV2());
+            sql += " ORDER BY e.modified_at desc limit ? offset ?";
+            result = jdbcTemplate.query(sql, EventRowMapper(), size, offset);
         }
 
         return result;
@@ -98,20 +101,28 @@ public class JdbcTemplateEventRepository implements EventRepository {
         jdbcTemplate.update("delete from event where id = ?", id);
     }
 
-//    private RowMapper<EventResponseDto> EventRowMapper() {
-//        return new RowMapper<EventResponseDto>() {
-//            @Override
-//            public EventResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-//                return new EventResponseDto(
-//                        rs.getLong("id"),
-//                        rs.getLong("user_id"),
-//                        rs.getString("title"),
-//                        rs.getString("contents")
-//                );
-//            }
-//
-//        };
-//    }
+    @Override
+    public long countEvents() throws NullPointerException{
+        String sql = "SELECT COUNT(*) FROM event";
+
+        return jdbcTemplate.queryForObject(sql, Long.class);
+    }
+
+    private RowMapper<EventWithUsernameResponseDto> EventRowMapper() {
+        return new RowMapper<EventWithUsernameResponseDto>() {
+            @Override
+            public EventWithUsernameResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new EventWithUsernameResponseDto(
+                        rs.getLong("e.id"),
+                        rs.getLong("e.user_id"),
+                        rs.getString("u.name"),
+                        rs.getString("e.title"),
+                        rs.getString("e.contents")
+                );
+            }
+
+        };
+    }
 
     private RowMapper<Event> EventRowMapperV2() {
         return new RowMapper<Event>() {
