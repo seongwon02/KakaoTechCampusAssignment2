@@ -1,4 +1,4 @@
-# **API 명세서**
+![image](https://github.com/user-attachments/assets/497bec23-58b6-4a0b-8133-6dc8f5a5f253)# **API 명세서**
 
 이미지 또는 아래 글을 클릭하시면 API 명세서 문서 링크로 이동합니다.
 </br></br>
@@ -8,9 +8,9 @@
 ---
 # **ERD**
 ### Lv1-2의 경우
-(https://github.com/seongwon02/KakaoTechCampusAssignment2/blob/main/lv1,2.png?raw=true)
+(![image](https://github.com/seongwon02/KakaoTechCampusAssignment2/blob/main/lv1,2.png?raw=true))
 ### Lv3-6의 경우
-()
+(![image](https://github.com/user-attachments/assets/932be1c3-189b-49f9-9635-662b3d0ab62c))
 
 ---
 # **SQL**
