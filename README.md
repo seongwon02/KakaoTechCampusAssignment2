@@ -8,8 +8,9 @@
 ---
 # **ERD**
 ### Lv1-2의 경우
-
+(https://github.com/seongwon02/KakaoTechCampusAssignment2/blob/main/lv1,2.png?raw=true)
 ### Lv3-6의 경우
+()
 
 ---
 # **SQL**
