@@ -65,7 +65,7 @@ public class JdbcTemplateEventRepository implements EventRepository {
             result = jdbcTemplate.query(sql, EventRowMapper(), user_id, size, offset);
         }
         else if (modified_at != null) {
-            sql += " WHERE DATE(e.modified_at) = ? ORDER BY modified_at desc limit ? offset ?";
+            sql += " WHERE DATE(e.modified_at) = ? ORDER BY e.modified_at desc limit ? offset ?";
             result = jdbcTemplate.query(sql, EventRowMapper(),  modified_at, size, offset);
         }
         else {
