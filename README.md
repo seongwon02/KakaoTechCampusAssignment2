@@ -7,5 +7,5 @@
 ### Lv3-6의 경우
 ![image](https://github.com/user-attachments/assets/932be1c3-189b-49f9-9635-662b3d0ab62c)
 # **SQL**
-인텔리제이 무료버전을 사용하고 있어서 MySQL과 연동이 잘 되지 않는 문제가 있습니다. 
+인텔리제이 무료버전을 사용하고 있어서 인텔리제이 내에서 SQL를 다루면 MySQL과 연동이 잘 되지 않는 문제가 발생했습니다. 
 따라서 DBeaver를 통해 만든 SQL Query를 복사하여 프로젝트 내의 sql 파일에 붙혀놓았습니다.
